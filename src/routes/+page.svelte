@@ -14,5 +14,5 @@
 
     <section class="homepage">
         <p class="text-4xl font-bold font-serif">Insert daily motivational quote here</p>
-        <button class="btn btn-secondary mt-10 font-serif">Create Your memories</button>
+        <button class="btn btn-secondary mt-10 font-serif text-xl">Create Your memories</button>
     </section>
