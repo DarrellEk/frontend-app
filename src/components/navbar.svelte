@@ -1,5 +1,5 @@
 <nav class="navbar bg-primary/80 flex justify-between">
-    <button class="btn btn-neutral mx-8">KAMPUNG</button>
+    <a href="/" class="btn btn-neutral mx-8">KAMPUNG</a>
     <div>
         <label class="swap swap-rotate">
             <input type="checkbox" class="theme-controller" value="retro" />
