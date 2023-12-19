@@ -2,10 +2,14 @@
     import { onMount } from 'svelte';
 
     const motivationalQuotes = [
-        "The only way to do great work is to love what you do. - Steve Jobs",
-        "Believe you can and you're halfway there. - Theodore Roosevelt",
-        "Don't watch the clock; do what it does. Keep going. - Sam Levenson",
-        "Your time is limited, don't waste it living someone else's life. - Steve Jobs",
+        "\"Memories may fade with time, but the love we put into creating them lasts forever.\"",
+        "\"In the album of life, each snapshot tells a story of cherished times.\"",
+        "\"Our hearts hold a collection of moments, each one a precious gem in the mosaic of our lives.\"",
+        "\"Every memory is a page in the book of our lives, and each chapter is a testament to the beauty of our journey.\"",
+        "\"Life's journey is marked by the imprints of joy and the footprints of those we hold dear.\"",
+        "\"The most beautiful things are not seen but felt—like the warmth of a cherished memory.\"",
+        "\"Our hearts hold a collection of moments, each one a precious gem in the mosaic of our lives.\"",
+        "\"The best souvenirs are not found in shops but in the moments that become lifelong memories.\"",
     ];
 
     let currentQuote = getRandomQuote();
@@ -18,12 +22,12 @@
 
     onMount(() => {
         const interval = setInterval(() => {
-            quoteElement.classList.add('fade-out');
+            quoteElement.style.opacity = 0; // Set opacity to 0 for fade-out effect
             setTimeout(() => {
                 currentQuote = getRandomQuote();
-                quoteElement.classList.remove('fade-out');
-            }, 500); // Adjust the timeout based on your transition duration
-        },5000);
+                quoteElement.style.opacity = 1; // Set opacity back to 1 for fade-in effect
+            }, 2000); // Adjust the timeout based on your transition duration
+        }, 9000);
 
         return () => clearInterval(interval); // Cleanup on unmount
     });
@@ -43,12 +47,11 @@
     }
 
     .fade-transition {
-        transition: opacity 1s;
+        transition: opacity 2s;
     }
-
 </style>
 
 <section class="homepage">
-    <p bind:this={quoteElement} class="text-4xl font-bold font-serif fade-transition">{currentQuote}</p>
+    <p bind:this={quoteElement} class="text-3xl font-bold font-serif fade-transition">{currentQuote}</p>
     <a href="/main" class="btn btn-secondary mt-10 font-serif text-xl">Create Your memories</a>
 </section>
