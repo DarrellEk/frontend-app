@@ -1,4 +1,3 @@
-<!-- YourComponent.svelte -->
 
 <script>
     import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
@@ -36,7 +35,7 @@
        });
    
        if (resp.status == 200) {
-          const res = await authenticateUser(userData.name, userData.password);
+          const res = await authenticateUser(userData.email, userData.password);
           if(res.success){
                 postSignup();
             }else{

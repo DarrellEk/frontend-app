@@ -1,10 +1,16 @@
 <script>
     import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
     import { goto } from '$app/navigation';
+    import { authenticateUser, isValidToken } from '../../../utils/auth';
 
     let formErrors = {};
+
+    function postLogIn(){
+      isValidToken();
+      goto('/')
+    }
   
-    async function signInUser(evt) {
+    async function logIn(evt) {
       evt.preventDefault();
   
       const userData = {
@@ -12,30 +18,12 @@
         password: evt.target['password'].value,
       };
   
-      const resp = await fetch(PUBLIC_BACKEND_BASE_URL + '/auth', {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-      });
-  
-      console.log(resp)
-  
-      if (resp.status === 200) {
-        const { userId, accessToken } = await resp.json();
-        localStorage.setItem('userId', userId);
-        localStorage.setItem('accessToken', accessToken, );
+      const resp = await authenticateUser(userData.email, userData.password);
 
-      } else {
-        const res = await resp.json();
-        console.error('Sign in failed:', res);
-        if (res.error) {
-          formErrors = res.error;
-        } else {
-          console.error('Sign in failed:', res);
-        }
+      if(resp.success){
+        postLogIn();
+      }else{
+        alert("Invalid email or password.")
       }
     }
   </script>
@@ -45,7 +33,7 @@
     <a class="link-hover italic text-xs" href="/users/signUp">Don't have an account? Click here to sign up.</a>
   </div>
   <div class="flex justify-center items-center mt-8">
-    <form on:submit={signInUser} class="w-1/3">
+    <form on:submit={logIn} class="w-1/3">
       <div class="form-control w-full">
         <label class="label" for="email">
           <span class="label-text">Email</span>
