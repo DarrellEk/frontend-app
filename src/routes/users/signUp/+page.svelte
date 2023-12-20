@@ -2,18 +2,26 @@
 
 <script>
     import { PUBLIC_BACKEND_BASE_URL } from '$env/static/public';
+    import {goto} from '$app/navigation';
+    import { authenticateUser} from './../../../utils/auth.js';
+    import { isValidToken } from './../../../utils/auth.js';
     let formErrors = {};
+
+    async function postSignup(){
+        isValidToken();
+        goto('/');
+    }
  
     async function createUser(evt) {
        evt.preventDefault()
    
-       if (evt.target['password'].value != evt.target['password-confirmation'].value) {
-         formErrors['password'] = { message: 'Password confirmation does not match' };
-         return;
-       }
+    //    if (evt.target['password'].value != evt.target['password-confirmation'].value) {
+    //      formErrors['password'] = { message: 'Password confirmation does not match' };
+    //      return;
+    //    }
    
        const userData = {
-         name: evt.target['name'].value,
+         username: evt.target['name'].value,
          email: evt.target['email'].value,
          password: evt.target['password'].value,
        };
@@ -28,8 +36,12 @@
        });
    
        if (resp.status == 200) {
-          const res = await authenticateUserSignIn(userData.name, userData.password);
-   
+          const res = await authenticateUser(userData.name, userData.password);
+          if(res.success){
+                postSignup();
+            }else{
+                throw 'Sign up succeeded but authentication failed';
+            }
          } else {
              const res = await resp.json();
        console.error('Sign up failed:', res);
