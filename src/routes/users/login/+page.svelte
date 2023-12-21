@@ -40,7 +40,8 @@
     }
   </script>
   
-  <h1 class="text-center text-xl">Sign In to Your Account</h1>
+  <br>
+  <h1 class="text-center text-xl">Login to Your Account</h1>
   <div class="text-center">
     <a class="link-hover italic text-xs" href="/users/signUp">Don't have an account? Click here to sign up.</a>
   </div>
@@ -71,7 +72,7 @@
       </div>
   
       <div class="form-control w-full mt-4">
-        <button class="btn btn-md">Sign In</button>
+        <button class="btn btn-md bg-blue-500 text-white">Sign In</button>
       </div>
     </form>
   </div>
