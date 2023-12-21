@@ -54,6 +54,7 @@
  </script>
  
  <br>
+ <h1 class="text-center text-xl">Sign In to Your Account</h1>
  <div class="text-center">
      <a class="link-hover italic text-xs" href="/users/login">Already have an account? Click here to login instead.</a>
  </div>
