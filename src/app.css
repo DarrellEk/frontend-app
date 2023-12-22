@@ -1,4 +1,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
-@import 'leaflet/dist/leaflet.css';
+
+input {
+    @apply px-5 py-3 rounded-lg;
+}

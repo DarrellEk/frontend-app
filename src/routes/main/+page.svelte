@@ -1,19 +1,87 @@
-<style>
-    p{
-        width: 100vw;
-        height: 90vh;
-    }
-</style>
+<script>
+	// import * as L from 'leaflet';
+	import 'leaflet/dist/leaflet.css';
+	import { onMount } from 'svelte';
+	import MarkerPopup from '../../components/markerPopup.svelte';
+	import MemoryForm from '../../components/memoryForm.svelte';
+	import Sidebar from '../../components/sidebar.svelte';
 
-<p>
-	<iframe
-		src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15935.209565028936!2d101.698544!3d3.14678455!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc49d3e30988d7%3A0x464a4b7fda23c09a!2sKuala%20Lumpur%20City%20Centre%2C%20Kuala%20Lumpur%2C%20Federal%20Territory%20of%20Kuala%20Lumpur!5e0!3m2!1sen!2smy!4v1702366030546!5m2!1sen!2smy"
-		width="100%"
-		height="100%"
-		style="border:0;"
-		allowfullscreen=""
-		loading="lazy"
-        title="map"
-		referrerpolicy="no-referrer-when-downgrade"
-	></iframe>
-</p>
+	let mapElement;
+	let memoryFormHidden = true;
+	let activeMarker;
+	const coords = [51.505, -0.09];
+	const markers = [];
+
+	function onPostSubmit() {
+		markers.push(activeMarker);
+		memoryFormHidden = true;
+	}
+
+	onMount(async () => {
+		const L = await import('leaflet');
+		const bindPopup = (await import('../../lib/bindPopup')).default;
+		let map = L.map(mapElement).setView(coords, 10);
+
+		L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+			attribution: `&copy;<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>,
+	     &copy;<a href="https://carto.com/attributions" target="_blank">CARTO</a>`,
+			subdomains: 'abcd',
+			maxZoom: 20
+		}).addTo(map);
+
+		map.on('click', (e) => {
+			let clickedCoords = [e.latlng.lat, e.latlng.lng];
+
+			map.setView(clickedCoords);
+
+			if (activeMarker !== undefined && markers.indexOf(activeMarker) === -1) {
+				map.removeLayer(activeMarker);
+				memoryFormHidden = true;
+			}
+
+			setTimeout(() => {
+				let accepted = false;
+				// this means marker was not added as memory
+
+				activeMarker = L.marker(clickedCoords).addTo(map);
+				bindPopup(activeMarker, (container) => {
+					return new MarkerPopup({
+						target: container,
+						props: {
+							onAccept: () => {
+								accepted = true;
+								activeMarker.closePopup();
+
+								memoryFormHidden = false;
+							},
+
+							onCancel: () => {
+								map.removeLayer(activeMarker);
+							}
+						}
+					});
+				});
+				activeMarker.openPopup();
+				activeMarker.on('popupclose', () => {
+					if (!accepted) {
+						map.removeLayer(activeMarker);
+						memoryFormHidden = true;
+					}
+				});
+			}, 150);
+		});
+	});
+</script>
+
+<Sidebar />
+<MemoryForm hidden={memoryFormHidden} {onPostSubmit} />
+<div id="map-container" class="h-full w-full">
+	<div id="map" class="h-full w-full" bind:this={mapElement} />
+</div>
+
+<style>
+	#map {
+		width: 100vw;
+		height: 100%;
+	}
+</style>

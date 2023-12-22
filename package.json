@@ -26,6 +26,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"leaflet": "^1.9.4"
+		"leaflet": "^1.9.4",
+		"typescript": "^5.3.3"
 	}
 }
